@@ -9,6 +9,27 @@ import (
 
 func main() {
 	server()
+
+	var a string
+	fmt.Scanln(&a)
+}
+func client() {
+	conn, ch, q := getQueue()
+	defer conn.Close()
+	defer ch.Close()
+
+	msgs, err := ch.Consume(
+		q.Name, //queue string
+		"", //consumer string
+		true, //AutoAck bool
+		false,//exclusive bool, 
+		false,//noLocal bool, 
+		false,//noWait bool, 
+		nil)//args amqp.Table)
+	failOnError(err,"Failed to register a cosumer")
+	for msg := range msgs{
+		log.Printf("Received message with message: %",msg.Body)
+	}
 }
 func server() {
 	conn, ch, q := getQueue()
