@@ -8,7 +8,8 @@ import (
 )
 
 func main() {
-	server()
+	go client()
+	go server()
 
 	var a string
 	fmt.Scanln(&a)
@@ -24,11 +25,11 @@ func client() {
 		true, //AutoAck bool
 		false,//exclusive bool, 
 		false,//noLocal bool, 
-		false,//noWait bool, 
+		true,//noWait bool, 
 		nil)//args amqp.Table)
 	failOnError(err,"Failed to register a cosumer")
 	for msg := range msgs{
-		log.Printf("Received message with message: %",msg.Body)
+		log.Printf("Received message with message: %s",msg.Body)
 	}
 }
 func server() {
